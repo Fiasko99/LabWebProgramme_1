@@ -4,9 +4,8 @@ using System.Management;
 using System.Net;
 using System.Windows.Forms;
 using System.Net.NetworkInformation;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Reflection;
+using System.Text;
 
 namespace LabWebProgramme_1
 {
@@ -104,20 +103,12 @@ namespace LabWebProgramme_1
         void GetListOfDomainObjects()
         {
             AppDomain domain = AppDomain.CurrentDomain;
-
             Assembly[] assemblies = domain.GetAssemblies();
-
             foreach (Assembly asm in assemblies)
-
             {
-
-                string s = asm.GetName().Name + "\r\n";
-
+                string s = asm.GetName().Name;
                 objectsDomain.Items.Add(s);
-
             }
-
-            this.domain.Text = domain.FriendlyName;
         }
 
         void GetListOfNetPorts()
@@ -129,46 +120,94 @@ namespace LabWebProgramme_1
             foreach (TcpConnectionInformation port in tcpConnections)
                 portsBox.Items.Add("Port #" + ++nPort + ": " + port.LocalEndPoint.Port);
         }
+        string GetSysInfo()
+        {
+            string text = "Системная информация";
+
+            text += "\n";
+            text += "\n-";
+            text += "Информация о компьютере:";
+
+            if(osVer.Checked == true)
+            {
+                text += "\n--";
+                text += osVer.Text;
+            }
+
+            if (totalRam.Checked == true)
+            {
+                text += "\n--";
+                text += totalRam.Text;
+            }    
+
+            if(objectsInDomain.Checked == true)
+            {
+                text += "\n";
+                text += "\n--";
+                text += objectsInDomain.Text;
+                text += "\n";
+                text += GetListOfBox(objectsDomain);
+            }
+
+            if (infoAV.Checked == true)
+            {
+                text += "\n--";
+                text += infoAV.Text;
+                text += "\n";
+                text += GetListOfBox(antiVirusBox);
+            }
+
+            if(drivesInfo.Checked == true)
+            {
+                text += "\n--";
+                text += drivesInfo.Text;
+                text += "\n";
+                text += GetListOfBox(drivesBox);
+            }
+
+
+            text += "\n";
+            text += "\n-";
+            text += "Сетевая информация:";
+
+            if (ports.Checked == true)
+            {
+                text += "\n--";
+                text += ports.Text;
+                text += "\n";
+                text += GetListOfBox(portsBox);
+            }
+
+            if (ipLabel.Checked == true)
+            {
+                text += "\n--";
+                text += ipLabel.Text;
+            }
+
+            if (domain.Checked == true)
+            {
+                text += "\n--";
+                text += domain.Text;
+            }
+
+            return text;
+        }
+
 
         void WriteToTxt()
         {
-            FolderBrowserDialog DirDialog = new FolderBrowserDialog
+            SaveFileDialog sfd = new SaveFileDialog
             {
-                Description = "Выбор директории",
-                SelectedPath = @"C:\"
+                OverwritePrompt = true,
+                Filter = format.Text,
+                FileName = "SysInfo"
             };
-
-            if (DirDialog.ShowDialog() == DialogResult.OK)
+            if (sfd.ShowDialog() == DialogResult.OK)
             {
-                string writePath = DirDialog.SelectedPath + @"\SystemInfo." + format.Text;
-                pathDir.Text = writePath;
-                
-                try
-                {
-
-                    using (StreamWriter sw = new StreamWriter(writePath, false, System.Text.Encoding.UTF8))
-                    {
-                        sw.WriteLine("Информация о сети:");
-                        sw.WriteLine(ipLabel.Text);
-                        sw.WriteLine(domain.Text);
-                        sw.WriteLine("\n");
-                    
-                        sw.WriteLine("Информация о компьютере:");
-                        sw.WriteLine(osVer.Text);                                
-                        sw.WriteLine(totalRam.Text);
-                        sw.WriteLine("\n");
-
-                        sw.WriteLine("\n");
-                        sw.WriteLine("Запись выполнена в:");
-                        sw.WriteLine(DateTime.Now);
-                    }
-
-                    result.Text = "Запись выполнена";
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+                string allInfo = GetSysInfo();
+                File.WriteAllText(sfd.FileName, allInfo, Encoding.UTF8);
+                result.Text = "Запись выполнена";
+                pathDir.Text = sfd.InitialDirectory + sfd.FileName;
             }
         }
 
@@ -182,6 +221,18 @@ namespace LabWebProgramme_1
             SaveButt.Visible = true;
             pathDir.Visible = true;
             result.Visible = true;
+        }
+
+        string GetListOfBox(ListBox objList)
+        {
+            string list = "";
+            foreach (string item in objList.Items)
+            {
+                list += "---";
+                list += item;
+                list += "\n";
+            }
+            return list;
         }
     }
 }
