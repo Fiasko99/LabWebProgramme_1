@@ -235,6 +235,7 @@
             this.Controls.Add(this.drivesBox);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "InfoForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Системная информация";
             this.Load += new System.EventHandler(this.InfoForm_Load);
             this.ResumeLayout(false);
