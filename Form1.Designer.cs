@@ -194,7 +194,7 @@
             // objectsInDomain
             // 
             this.objectsInDomain.AutoSize = true;
-            this.objectsInDomain.Location = new System.Drawing.Point(1, 134);
+            this.objectsInDomain.Location = new System.Drawing.Point(2, 226);
             this.objectsInDomain.Name = "objectsInDomain";
             this.objectsInDomain.Size = new System.Drawing.Size(69, 17);
             this.objectsInDomain.TabIndex = 39;
@@ -204,7 +204,7 @@
             // ports
             // 
             this.ports.AutoSize = true;
-            this.ports.Location = new System.Drawing.Point(2, 226);
+            this.ports.Location = new System.Drawing.Point(2, 134);
             this.ports.Name = "ports";
             this.ports.Size = new System.Drawing.Size(117, 17);
             this.ports.TabIndex = 40;
